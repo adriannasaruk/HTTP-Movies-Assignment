@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 
+
 const initialItem = {
-    id: "",
+    id: Date.now(),
     title: "",
     director: "",
     metascore: "",
@@ -11,40 +12,49 @@ const initialItem = {
 };
 const UpdateForm =props=> {
 const { id } = useParams();
-const { push } = useHistory();
+const history = useHistory();
     
 const [item, setItem] = useState(initialItem) 
 
+useEffect(()=>{
+    axios.get(`http://localhost:5000/api/movies/${id}`)
+    .then(res => {
+        setItem(res.data)
+        console.log("USEEFFECT",res.data)
+    })
+    .catch(err => console.log(err))
+
+},[id])
+
+
 const changeHandler = e => {
-    e.persist()
-    let value = e.target.value;
-    if(e.target.value === "metascore") {
-        value = parseInt(value, 10)
-    }
+    // e.persist()
+    // let value = e.target.value;
+    // if(e.target.value === "metascore") {
+    //     value = parseInt(value, 10)
+    // }
 
 setItem({
-    ...item, [e.target.name]: value
+    ...item, [e.target.name]: e.target.value
    })
 }
 
 
+
+
 const handleSubmit = e => {
-    e.preventDefault()
+    e.preventDefault();
 
     axios.put(`http://localhost:5000/api/movies/${id}`, item)
     .then(res=> {
-        console.log(res)
-        const newItemsArray = props.items.map(e=>{
-            if(`{e.id}` === id)  {
-                return item
-            }
-            else {
-               return e 
-            }
+        console.log("PUT", res)
+        props.setMovieList(res.data)
+        history.push(`/movies/${id}`)
         })
-        props.setItems(res.data);
-        push(`/item-list/${id}`)
-    })
+       
+// props.setMovieList([...newItemsArray, res.data]);
+        // console.log(res.data)
+        // history.push(`/movies/${id}`)
     .catch(err => console.log(err))
 }
 
@@ -60,7 +70,7 @@ return(
           placeholder="Title"
           value={item.title}
         />
-        <div className="baseline" />
+        <div className="" />
 
         <input
           type="text"
@@ -69,7 +79,7 @@ return(
           placeholder="Director"
           value={item.director}
         />
-        <div className="baseline" />
+        <div className="" />
 
         <input
           type="number"
@@ -78,7 +88,7 @@ return(
           placeholder="Metascore"
           value={item.metascore}
         />
-        <div className="baseline" />
+        <div className="" />
         <button type="submit">Update</button>
         </form>
     </div>
