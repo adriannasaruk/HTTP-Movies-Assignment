@@ -6,7 +6,7 @@ function MovieList(props) {
   return (
     <div className="movie-list">
       {
-        props.movies.map(movie => (
+        props.movieList.map(movie => (
           <Link key={movie.id} to={`/movies/${movie.id}`}>
             <MovieCard movie={movie} />
           </Link>

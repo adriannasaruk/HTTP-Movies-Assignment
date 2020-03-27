@@ -9,6 +9,7 @@ import UpdateForm from "./Movies/UpdateForm"
 const App = () => {
   const [savedList, setSavedList] = useState([]);
   const [movieList, setMovieList] = useState([]);
+  const [change, setChange] = useState([])
   const history = useHistory();
   const {id} = useParams()
   const getMovieList = () => {
@@ -24,9 +25,9 @@ const App = () => {
 
   useEffect(() => {
     getMovieList();
-  }, []);
+  }, [change]);
 
-  
+   
 
  
 
@@ -35,14 +36,14 @@ const App = () => {
       <SavedList list={savedList} />
 
       <Route exact path="/">
-        <MovieList movies={movieList} />
+        <MovieList movieList={movieList} />
       </Route>
       <Route exact path="/update-movie/:id">
-        <UpdateForm  movieList={movieList} setMovieList={setMovieList} />
+        <UpdateForm  movieList={movieList} setMovieList={setMovieList} setChange={setChange} />
       </Route>
 
       <Route path="/movies/:id">
-        <Movie  addToSavedList={addToSavedList} setSavedList={setSavedList}  />
+        <Movie  addToSavedList={addToSavedList} setMovieList={setMovieList} setChange={setChange}  />
       </Route>
     </>
   );

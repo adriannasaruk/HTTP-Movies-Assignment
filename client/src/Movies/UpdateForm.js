@@ -10,7 +10,7 @@ const initialItem = {
     metascore: "",
     stars: [],
 };
-const UpdateForm =props=> {
+const UpdateForm =(props)=> {
 const { id } = useParams();
 const history = useHistory();
     
@@ -20,11 +20,11 @@ useEffect(()=>{
     axios.get(`http://localhost:5000/api/movies/${id}`)
     .then(res => {
         setItem(res.data)
-        console.log("USEEFFECT",res.data)
+        console.log("USEEFFECT", res.data)
     })
     .catch(err => console.log(err))
 
-},[id])
+},[ id])
 
 
 const changeHandler = e => {
@@ -47,9 +47,11 @@ const handleSubmit = e => {
 
     axios.put(`http://localhost:5000/api/movies/${id}`, item)
     .then(res=> {
+        props.setChange(res)
         console.log("PUT", res)
-        props.setMovieList(res.data)
-        history.push(`/movies/${id}`)
+        console.log(res.data)
+        history.push(`/`)
+        console.log({id})
         })
        
 // props.setMovieList([...newItemsArray, res.data]);
